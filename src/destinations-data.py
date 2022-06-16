@@ -1,6 +1,8 @@
 import requests as req
 import json
 import pandas as pd
+import numpy as np
+from pathlib import Path  
 
 # CONSTANTS
 DOCS_FOLDER = '../docs/'
@@ -25,17 +27,23 @@ def get_cities_infos(cities:list)->list:
                     pass
             if response:
                 cities_infos.append({
-                    'name': response['display_name'].split(',')[0],
+                    'city_name': response['display_name'].split(',')[0],
                     'lat': response['lat'],
                     'lon': response['lon']
                     })
             else:
                 cities_infos.append({
-                    'name': city,
+                    'city_name': city,
                     'lat': "",
                     'lon': ""
                     })
     return cities_infos
+
+def export_csv(data:list):
+    filepath = Path('../docs/cities_infos.csv')
+    df = pd.DataFrame(data=data)
+    df.to_csv(filepath)
+    print(df)
 
 def main():
     cities = []
@@ -52,7 +60,7 @@ def main():
     else:
         cities = contents
 
-    print(get_cities_infos(cities))
-
+    data_cities = get_cities_infos(cities)
+    export_csv(data_cities)
 main()
 
