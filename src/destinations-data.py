@@ -2,7 +2,10 @@ import requests as req
 import json
 import pandas as pd
 import numpy as np
-from pathlib import Path  
+from pathlib import Path
+
+#personnal lib
+from my_functions import export_csv
 
 # CONSTANTS
 DOCS_FOLDER = '../docs/'
@@ -38,13 +41,7 @@ def get_cities_infos(cities:list)->list:
                     'lon': ""
                     })
     return cities_infos
-
-def export_csv(data:list):
-    filepath = Path('../docs/cities_infos.csv')
-    df = pd.DataFrame(data=data)
-    df.to_csv(filepath)
-    print(df)
-
+    
 def main():
     cities = []
 
@@ -61,6 +58,8 @@ def main():
         cities = contents
 
     data_cities = get_cities_infos(cities)
-    export_csv(data_cities)
+    export_csv(data = data_cities, rel_path = DOCS_FOLDER, file_name = 'cities_infos.csv')
+
+    
 main()
 
