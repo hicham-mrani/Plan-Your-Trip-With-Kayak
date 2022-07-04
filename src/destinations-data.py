@@ -30,15 +30,17 @@ def get_cities_infos(cities:list)->list:
                     pass
             if response:
                 cities_infos.append({
-                    'city_name': response['display_name'].split(',')[0],
-                    'lat': response['lat'],
-                    'lon': response['lon']
+                    "city_name": response["display_name"].split(',')[0],
+                    "lat": response["lat"],
+                    "lon": response["lon"],
+                    "boundingbox": response["boundingbox"]
                     })
             else:
                 cities_infos.append({
-                    'city_name': city,
-                    'lat': "",
-                    'lon': ""
+                    "city_name": city,
+                    "lat": "",
+                    "lon": "",
+                    "boundingbox": ""
                     })
     return cities_infos
     
