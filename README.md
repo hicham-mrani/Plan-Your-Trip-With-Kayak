@@ -4,7 +4,14 @@ Email : hicham.mrani@outlook.fr
 
 Vidyard link : [#]()
 
+# Installation
 
+pip install -r requirements.txt
+
+## ⚠️ Infos
+
+the 'my_utils' file is my own library, it's only used to get API KEY and other private Auth KEY from my env_var file
+you can provide your own auth key for the associates fields
 # Plan your trip with Kayak
 
 ![Kayak](https://seekvectorlogo.com/wp-content/uploads/2018/01/kayak-vector-logo.png)
