@@ -1,30 +1,33 @@
+# LIBRARIES
 import os
 import sys
-from datetime import datetime
-from my_utils import EnvironmentVariables
-env_manager = EnvironmentVariables()
 import requests as req
 import pandas as pd
+from datetime import datetime
+from my_utils import EnvironmentVariables # private module
+from my_functions import export_csv # private module
 
-#personnal lib
-from my_functions import export_csv
+env_manager = EnvironmentVariables() # class instance
 
+# CONSTANTS
 DOCS = '../docs/'
-END_POINT = 'https://api.openweathermap.org'
+API_OWM = 'https://api.openweathermap.org'
 API_KEY_NAME = 'FREE_OWM_API_KEY'
-API_KEY = env_manager.get_value(API_KEY_NAME)
+API_KEY_OWM = env_manager.get_value(API_KEY_NAME) # get my private key from private file on my computer
 LANG = 'fr' # to get the output in french
 EXCLUDE = 'hourly,minutely,current' # I just want daily weather
 Unit = 'metric' # For temperature in Celsius and wind speed in meter/sec
 
-# Get our cities list
+# create dataframe of cities
 cities = pd.read_csv(DOCS + 'cities_infos.csv')
-cities.drop(columns = cities.columns[0], inplace=True)
 
-# API call for all cities in my list
+# /!\ there is a paramter to provide to read_csv to avoid this line (check later)
+cities.drop(columns = cities.columns[0], inplace=True) 
+
+# get weather for all my cities from API
 weather_cities = []
 for city in range(len(cities)):
-    response = req.get(END_POINT+'/data/2.5/onecall', params={'lat': cities['lat'][city], 'lon': cities['lon'][city],'units': Unit,'exclude': EXCLUDE, "lang": LANG, 'appid': API_KEY })
+    response = req.get(API_OWM+'/data/2.5/onecall', params={'lat': cities['lat'][city], 'lon': cities['lon'][city],'units': Unit,'exclude': EXCLUDE, "lang": LANG, 'appid': API_KEY })
     data = {
         'name': cities['city_name'][city],
         'lat': cities['lat'][city],
