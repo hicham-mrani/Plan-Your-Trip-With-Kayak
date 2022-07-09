@@ -5,7 +5,7 @@ import requests
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from my_functions import export_csv, export_json # private module
+from my_functions import export_json # private module
 
 # CONSTANTS
 DOCS = '../docs/'
@@ -20,11 +20,11 @@ def get_cities_infos(cities:list)->list:
         for city in cities:
             try:
                 # we test if we recover the result at index 0 of our answer for the city request
-                response = req.get(API_NOMINATIM + 'search', params={'city': city, 'country':'france', 'format':'json', 'polygon_geojson': 1}).json()[0]
+                response = requests.get(API_NOMINATIM + 'search', params={'city': city, 'country':'france', 'format':'json', 'polygon_geojson': 1}).json()[0]
             except IndexError: 
                 # if we have an exception, we test if we recover the result at index 0 of our answer for the street request
                 try:
-                    response = req.get(API_NOMINATIM + 'search', params={'street': city, 'country':'france', 'format':'json', 'polygon_geojson': 1}).json()[0]
+                    response = requests.get(API_NOMINATIM + 'search', params={'street': city, 'country':'france', 'format':'json', 'polygon_geojson': 1}).json()[0]
                 except IndexError:
                     # if we have an exception again, so we pass and set the city gps as ""
                     response = False
@@ -37,7 +37,6 @@ def get_cities_infos(cities:list)->list:
                     "lat": response["lat"],
                     "lon": response["lon"],
                     })
-                #export_json(dictionary=response["geojson"], rel_path=os.path.join(POLYGONS,'france/'), file_name = city_name)
             else:
                 cities_infos.append({
                     "city_name": city,
@@ -62,7 +61,9 @@ def main():
         cities = contents
 
     data_cities = get_cities_infos(cities)
-    export_csv(data = data_cities, rel_path = DOCS, file_name = 'cities_infos.csv')
+
+    df = pd.DataFrame(data=data_cities)
+    df.to_csv(DOCS+'cities_points.csv', index=False)
 
 # MAIN
 main()
